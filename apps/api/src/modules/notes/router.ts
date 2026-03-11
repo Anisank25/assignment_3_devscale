@@ -21,7 +21,7 @@ export const noteRouter = new Hono()
 		return c.json({
 			message: "new note created",
 			data: newNote,
-		});
+		},200);
 	})
 	.patch("/", zValidator("json", UpdateSchema.partial()), async (c) => {
 		try {

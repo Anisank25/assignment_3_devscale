@@ -19,7 +19,8 @@ function App() {
 	const [noteContent, setNoteContent] = useState("");
 	const [noteID, setNoteID] = useState<number>(0);
 	const [mode,setMode] = useState <"create"|"delete"|"update"|null>(null)
-	const [error, setError] = useState<string | null>(null);
+	//const [error, setError] = useState<string | null>(null);
+	const [notif, setNotif] = useState <string|null> (null);
 
 	async function handleCreateNote() {
 		const res = await api.notes.$post({
@@ -27,11 +28,14 @@ function App() {
 				content: noteContent,
 			},
 		});
-
 		const data = await res.json();
-		console.log(data);
+		setNotif(data.message);
 		router.invalidate();
-		setMode(null)
+
+		setTimeout(() => {
+			setNotif(null);
+			setMode(null);
+		}, 2000);
 	}
 
 	async function handleDeleteNote() {
@@ -42,25 +46,30 @@ function App() {
 				},
 			});
 			const data = await res.json();
+			setNotif(data.message);
+			router.invalidate();
 
 			if (!res.ok) {
-				console.log (`Error: ${data.message}`)
-				setError(data.message)
-				
+				setNotif(data.message)
 				
 				setTimeout(() => {
 					setMode(null);
 				}, 1000);
 				return;
-			}
+			} 
+				
+			setTimeout(() => {
+				setNotif(null);
+				setMode(null);
+			}, 1000);	
 
-			setError(null);
+			setNotif(null);
 			console.log(data);
 			router.invalidate();
 			setMode(null)
 		} catch (err) {
 			if (err instanceof Error) {
-				setError(err.message);
+				setNotif(err.message);
 			}
 		}
 	}
@@ -77,22 +86,23 @@ function App() {
 			});
 
 			const data = await res.json();
+			setNotif (data.message)
+			router.invalidate();
 
 			if (!res.ok) {
-				setError(data.message);
+				setNotif(data.message);
 				setTimeout(() => {
 					setMode(null)
 				}, 1000);
 				return;
 			}
-
-			console.log(data);
-			router.invalidate();
-			setMode(null)	
-
+			setTimeout(() => {
+				setNotif(null);
+				setMode(null);
+			}, 1000);
 		} catch (err) {
 			if (err instanceof Error) {
-				setError(err.message);
+				setNotif(err.message);
 			}
 		}
 	}
@@ -115,12 +125,18 @@ function App() {
 				{mode === "create" && (
 					<div>
 						<p>Create Menu</p>
-						<form>
+						<form
+							onSubmit={(e) => {
+								e.preventDefault();
+								handleCreateNote();
+							}}>
 							<textarea
 								placeholder="Content"
 								onChange={(e) => setNoteContent(e.target.value)}
 							></textarea>
-							<Button onClick={handleCreateNote}>Save</Button>
+							<div className = "notif">{notif}</div>
+							<Button type="submit">Save</Button>
+							
 						</form>
 						<br></br>
 						<Button onClick={() => setMode(null)}>Back</Button>
@@ -130,15 +146,18 @@ function App() {
 				{mode === "delete" && (
 					<div>
 						<p>Delete Menu</p>
-						<form>		
-							<br></br>		
+						<form
+							onSubmit={(e) => {
+								e.preventDefault();
+								handleDeleteNote();
+						}}>			
 							<input
 								type="number"
 								placeholder="Notes ID"
 								onChange={(e) => setNoteID(Number(e.target.value))}
 							/>
-							<div className="alert-danger">{error}</div>
-							<Button onClick={handleDeleteNote}>Delete</Button>
+							<div className = "notif">{notif}</div>
+							<Button type="submit">Delete</Button>
 
 						</form>
 						<br></br>
@@ -164,8 +183,8 @@ function App() {
 								placeholder="Content"
 								onChange={(e) => setNoteContent(e.target.value)}
 							></textarea>
-							<div className="alert-danger">{error}</div>
-							<Button onClick={handleUpdateNote}>Update</Button>
+							<div className = "notif">{notif}</div>
+							<Button type="submit">Update</Button>
 						</form>
 						<br></br>
 						<Button onClick={() => setMode(null)}>Back</Button>
