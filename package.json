@@ -1,0 +1,27 @@
+{
+	"name": "notesapp-monorepo",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"dev": "pnpm --parallel --filter=api --filter=platform --filter=@devsca/ui dev",
+		"lint": "pnpx @biome/biome check",
+		"lint:fix": "pnpx @biomejs/biome check --write --unsafe"
+	},
+	"pnpm": {
+		"onlyBuiltDependencies": [
+			"better-sqlite3"
+		]
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"packageManager": "pnpm@10.29.3",
+	"dependencies": {
+		"dotenv-cli": "^11.0.0"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.4.6",
+		"@tailwindcss/typography": "^0.5.19"
+	}
+}

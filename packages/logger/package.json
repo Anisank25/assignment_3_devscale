@@ -1,0 +1,16 @@
+{
+	"name": "@devsca/logger",
+	"version": "1.0.0",
+	"type": "module",
+	"description": "",
+	"keywords": [],
+	"exports": {
+		".": "./src/index.ts"
+	},
+	"author": "",
+	"license": "ISC",
+	"packageManager": "pnpm@10.29.3",
+	"devDependencies": {
+		"typescript": "^5.9.3"
+	}
+}
