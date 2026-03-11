@@ -57,6 +57,7 @@ function App() {
 			setError(null);
 			console.log(data);
 			router.invalidate();
+			setMode(null)
 		} catch (err) {
 			if (err instanceof Error) {
 				setError(err.message);
